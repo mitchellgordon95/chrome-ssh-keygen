@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSH Key Generator</title>
+  <script type="module" crossorigin src="/assets/popup-CdyFB-oY.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/popup-DGb9sSQS.css">
+</head>
+<body>
+  <div class="container">
+    <h1>SSH Key Generator</h1>
+    <form id="keygen-form">
+      <div class="field">
+        <label for="algorithm">Algorithm</label>
+        <select id="algorithm">
+          <option value="ed25519" selected>Ed25519 (recommended)</option>
+          <option value="rsa">RSA-3072</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="comment">Comment (optional)</label>
+        <input type="text" id="comment" placeholder="user@host">
+      </div>
+      <button type="submit" id="generate-btn">Generate Key Pair</button>
+    </form>
+    <div id="status" class="status hidden"></div>
+    <div id="result" class="result hidden">
+      <h2>Key Generated!</h2>
+      <div class="actions">
+        <button id="download-private" class="download-btn">Download Private Key</button>
+        <button id="download-public" class="download-btn">Download Public Key</button>
+      </div>
+      <div class="field">
+        <label>Public Key</label>
+        <textarea id="pubkey-display" readonly rows="3"></textarea>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
