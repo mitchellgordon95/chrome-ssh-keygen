@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
-import { copyFileSync } from 'fs';
+import { copyFileSync, writeFileSync } from 'fs';
 
 export default defineConfig({
   build: {
@@ -13,11 +13,16 @@ export default defineConfig({
   },
   plugins: [
     {
-      name: 'copy-manifest',
+      name: 'copy-manifest-and-background',
       closeBundle() {
         copyFileSync(
           resolve(__dirname, 'manifest.json'),
           resolve(__dirname, 'dist/manifest.json'),
+        );
+        // Write a minimal background service worker
+        writeFileSync(
+          resolve(__dirname, 'dist/background.js'),
+          '// MV3 service worker\n',
         );
       },
     },

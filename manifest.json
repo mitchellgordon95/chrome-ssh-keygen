@@ -4,6 +4,10 @@
   "version": "1.0.0",
   "description": "Generate SSH keypairs (Ed25519 / RSA-3072) entirely in-browser using the WebCrypto API.",
   "permissions": [],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
   "action": {
     "default_popup": "src/popup/index.html",
     "default_title": "Generate SSH Key"
