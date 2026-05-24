@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "SSH Key Generator",
+  "version": "1.0.0",
+  "description": "Generate SSH keypairs (Ed25519 / RSA-3072) entirely in-browser using the WebCrypto API.",
+  "permissions": [],
+  "action": {
+    "default_popup": "src/popup/index.html",
+    "default_title": "Generate SSH Key"
+  },
+  "icons": {}
+}
