@@ -1,8 +1,9 @@
-import { generateEd25519, generateRSA, type GeneratedKeyPair } from '../lib/keygen.js';
+import { generateEd25519, generateRSA, generateECDSA, type GeneratedKeyPair, type Algorithm } from '../lib/keygen.js';
 
 const form = document.getElementById('keygen-form') as HTMLFormElement;
 const algorithmSelect = document.getElementById('algorithm') as HTMLSelectElement;
 const commentInput = document.getElementById('comment') as HTMLInputElement;
+const passphraseInput = document.getElementById('passphrase') as HTMLInputElement;
 const generateBtn = document.getElementById('generate-btn') as HTMLButtonElement;
 const statusDiv = document.getElementById('status') as HTMLDivElement;
 const resultDiv = document.getElementById('result') as HTMLDivElement;
@@ -32,23 +33,37 @@ function downloadFile(content: string, filename: string) {
   URL.revokeObjectURL(url);
 }
 
+function getFilename(algorithm: Algorithm): { priv: string; pub: string } {
+  switch (algorithm) {
+    case 'ed25519': return { priv: 'id_ed25519', pub: 'id_ed25519.pub' };
+    case 'rsa': return { priv: 'id_rsa', pub: 'id_rsa.pub' };
+    case 'ecdsa-p256': return { priv: 'id_ecdsa_p256', pub: 'id_ecdsa_p256.pub' };
+    case 'ecdsa-p384': return { priv: 'id_ecdsa_p384', pub: 'id_ecdsa_p384.pub' };
+    case 'ecdsa-p521': return { priv: 'id_ecdsa_p521', pub: 'id_ecdsa_p521.pub' };
+  }
+}
+
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   hideStatus();
   resultDiv.classList.add('hidden');
 
-  const algorithm = algorithmSelect.value as 'ed25519' | 'rsa';
+  const algorithm = algorithmSelect.value as Algorithm;
   const comment = commentInput.value.trim();
+  const passphrase = passphraseInput.value || undefined;
 
   generateBtn.disabled = true;
   generateBtn.textContent = 'Generating...';
   showStatus('Generating keypair...', 'info');
 
   try {
+    const opts = { comment, passphrase };
     if (algorithm === 'ed25519') {
-      lastResult = await generateEd25519(comment);
+      lastResult = await generateEd25519(opts);
+    } else if (algorithm === 'rsa') {
+      lastResult = await generateRSA(opts);
     } else {
-      lastResult = await generateRSA(comment);
+      lastResult = await generateECDSA(algorithm, opts);
     }
 
     hideStatus();
@@ -64,12 +79,12 @@ form.addEventListener('submit', async (e) => {
 
 downloadPrivateBtn.addEventListener('click', () => {
   if (!lastResult) return;
-  const filename = lastResult.algorithm === 'ed25519' ? 'id_ed25519' : 'id_rsa';
-  downloadFile(lastResult.privateKeyPEM, filename);
+  const { priv } = getFilename(lastResult.algorithm);
+  downloadFile(lastResult.privateKeyPEM, priv);
 });
 
 downloadPublicBtn.addEventListener('click', () => {
   if (!lastResult) return;
-  const filename = lastResult.algorithm === 'ed25519' ? 'id_ed25519.pub' : 'id_rsa.pub';
-  downloadFile(lastResult.publicKeyLine + '\n', filename);
+  const { pub } = getFilename(lastResult.algorithm);
+  downloadFile(lastResult.publicKeyLine + '\n', pub);
 });

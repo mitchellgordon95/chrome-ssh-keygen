@@ -25,6 +25,21 @@ h1 {
   color: #1a73e8;
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.header h1 {
+  margin-bottom: 0;
+}
+
+.logo {
+  flex-shrink: 0;
+}
+
 h2 {
   font-size: 14px;
   margin-bottom: 12px;
@@ -43,7 +58,7 @@ label {
   color: #555;
 }
 
-select, input[type="text"] {
+select, input[type="text"], input[type="password"] {
   width: 100%;
   padding: 8px;
   border: 1px solid #ddd;
@@ -128,4 +143,29 @@ textarea {
   margin-top: 16px;
   padding-top: 16px;
   border-top: 1px solid #eee;
+}
+
+.instructions {
+  margin-top: 12px;
+  font-size: 12px;
+  color: #555;
+}
+
+.instructions summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #1a73e8;
+  margin-bottom: 8px;
+}
+
+.instructions ol {
+  padding-left: 20px;
+  line-height: 1.6;
+}
+
+.instructions code {
+  background: #f0f0f0;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-size: 11px;
 }

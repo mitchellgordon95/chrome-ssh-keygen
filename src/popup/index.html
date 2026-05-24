@@ -8,18 +8,28 @@
 </head>
 <body>
   <div class="container">
-    <h1>SSH Key Generator</h1>
+    <div class="header">
+      <img src="/icons/icon48.png" alt="SSH Key" class="logo" width="24" height="24">
+      <h1>SSH Key Generator</h1>
+    </div>
     <form id="keygen-form">
       <div class="field">
         <label for="algorithm">Algorithm</label>
         <select id="algorithm">
           <option value="ed25519" selected>Ed25519 (recommended)</option>
+          <option value="ecdsa-p256">ECDSA P-256</option>
+          <option value="ecdsa-p384">ECDSA P-384</option>
+          <option value="ecdsa-p521">ECDSA P-521</option>
           <option value="rsa">RSA-3072</option>
         </select>
       </div>
       <div class="field">
         <label for="comment">Comment (optional)</label>
         <input type="text" id="comment" placeholder="user@host">
+      </div>
+      <div class="field">
+        <label for="passphrase">Passphrase (optional)</label>
+        <input type="password" id="passphrase" placeholder="Leave empty for no encryption">
       </div>
       <button type="submit" id="generate-btn">Generate Key Pair</button>
     </form>
@@ -34,6 +44,18 @@
         <label>Public Key</label>
         <textarea id="pubkey-display" readonly rows="3"></textarea>
       </div>
+      <details class="instructions">
+        <summary>Importing into Secure Shell App</summary>
+        <ol>
+          <li>Make sure both files have matching base names (e.g., private = <code>id_ed25519</code>, public = <code>id_ed25519.pub</code>).</li>
+          <li>Open Secure Shell App and click the gear/Options icon to open the preferences tab.</li>
+          <li>Click <strong>Identity</strong> in the left sidebar.</li>
+          <li>Click <strong>Import...</strong> and in the file picker, select BOTH the private key and the <code>.pub</code> file at once (Ctrl/Cmd-click to multi-select). The import will fail if you upload only one.</li>
+          <li>The identity now appears in the list.</li>
+          <li>In a connection profile, set <strong>Identity</strong> to the imported key. Connect.</li>
+          <li>The matching public key must already be in the remote server's <code>~/.ssh/authorized_keys</code> for auth to succeed.</li>
+        </ol>
+      </details>
     </div>
   </div>
   <script type="module" src="popup.ts"></script>
