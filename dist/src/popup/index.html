@@ -4,23 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SSH Key Generator</title>
-  <script type="module" crossorigin src="/assets/popup-CdyFB-oY.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/popup-DGb9sSQS.css">
+  <script type="module" crossorigin src="/assets/popup-DIH46U2R.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/popup-zYOCwl1W.css">
 </head>
 <body>
   <div class="container">
-    <h1>SSH Key Generator</h1>
+    <div class="header">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAAEGklEQVRoge2YX2hbVRzHP7+bdnSF66qsSXOLbUUHbaNs0Jf55La+7dnBwD8wnWXiHtbGxylR9iLYqZNNmFCHvijo616kCj6pIKNi51gmXcZ2b5IW7BKYWRz350OT5jYkadLmJgXzfTrnd7/ne77fnHPPPQQ66OD/DWnXxAPTTkQM44ChhBBVF0kr7rXkbPh6IzotDTASW+rJZ3pPI3oKeLoK7S9BPus2H1y8HXsqt5lmywIMziQPKnyDMFTnkIQox++dH/i5FqklAQajzouKfAX0eMqrIjrvqtwBMESHVGUS6PNwcoK+cm82/G01bd8DDL6del5Vf6BkPq3CWSsTuvLbZfnXy52Y0m7bTJ8Q0XMo/YVyTpTD1VbC1wAjsaWefHb3DWC4UFqkyz1qf2DdqTUuHLWHBeMqMF4o3e7NZ0dvfbrvYTnXaK7ljchnek9TMp+uxzyAM2slFPcownKhNPJP92NvVeL6GgDRqWJThbP1mC/CmbUSovJuaby+WYnnW4CBaScC7Ct0V61M6EqjGn3myhxwv9B9JnzGHivn+BbACMj+YltE58tf2HqwGIvkBZ1f1+ky9pdz/NtCrljFpsLSVmW8Y0VlsPy5bwFEUI+LLZ92ihiejpY/9y2AonaxLcLIVnVES2PVKGkW4VsAF11Yn1hlcmJKuxvViMQWdyEcWdd55C6Uc3wLsHar1JuFbp9tpk80qvF39omTwJ5C95bzsfVnOcfX74BgXF5vi54LR+3hWnwv1rjyXkmLS5V4vgboNh9cBBIAKP2CcbWeEJ6rxN5CaWl3PlsxgP+XuZnkQRV+pHSZWxHknT5zZW4xFsl7uZHY4q7VzN7XVfR9SuZzhqsv3P0o/GslfR8DqIRn0i8BGLgPVeRLNl6n7ws67yIJKJw2ay/sHg8npyovO+dD31WbxZ8AMTWsbOpz4DUARV4NiN50la+h7iN1yXD1eLVfvojmvwNl5ou4++HAL7357KioRIF4DYW4wExvPju2mXlo9gpUNj9nm6E3iInrpYbP2GMSMA4IDAAoJMG9Zs9aNxqZsokBVMLR5CVBTnmKX9hm6GS5+WaiSQHaYx6ga/sSaljTqe9BjniKLTEP212BYxqwhlJ/AKOeasvMw3YCVDCvyE+OGTzcKvOw1S10SLusoXQCsDzVuGMGJ1tpHrayAoe0y5pILbPhDyiJ22ZwnJg8ap61+tBYgGMasIbTy6g+XiwpknTM4JPtMA+NbKHinlc85sk4ZnC4Xeah7quEGuGh5O9sOG1k1TFD/cQkX3VYC1BHAJVwNLUgyLinGLfNYNvNw6YBil9YnvUU47YZassLWwk1AlS8HlzfSeahRgArmvqkzPycbYae20nmofYW2vRKvBNQNYAoF4AcyoWdar6DDjrooP34D/kFiUIcKM3CAAAAAElFTkSuQmCC" alt="SSH Key" class="logo" width="24" height="24">
+      <h1>SSH Key Generator</h1>
+    </div>
     <form id="keygen-form">
       <div class="field">
         <label for="algorithm">Algorithm</label>
         <select id="algorithm">
           <option value="ed25519" selected>Ed25519 (recommended)</option>
+          <option value="ecdsa-p256">ECDSA P-256</option>
+          <option value="ecdsa-p384">ECDSA P-384</option>
+          <option value="ecdsa-p521">ECDSA P-521</option>
           <option value="rsa">RSA-3072</option>
         </select>
       </div>
       <div class="field">
         <label for="comment">Comment (optional)</label>
         <input type="text" id="comment" placeholder="user@host">
+      </div>
+      <div class="field">
+        <label for="passphrase">Passphrase (optional)</label>
+        <input type="password" id="passphrase" placeholder="Leave empty for no encryption">
       </div>
       <button type="submit" id="generate-btn">Generate Key Pair</button>
     </form>
@@ -35,6 +45,18 @@
         <label>Public Key</label>
         <textarea id="pubkey-display" readonly rows="3"></textarea>
       </div>
+      <details class="instructions">
+        <summary>Importing into Secure Shell App</summary>
+        <ol>
+          <li>Make sure both files have matching base names (e.g., private = <code>id_ed25519</code>, public = <code>id_ed25519.pub</code>).</li>
+          <li>Open Secure Shell App and click the gear/Options icon to open the preferences tab.</li>
+          <li>Click <strong>Identity</strong> in the left sidebar.</li>
+          <li>Click <strong>Import...</strong> and in the file picker, select BOTH the private key and the <code>.pub</code> file at once (Ctrl/Cmd-click to multi-select). The import will fail if you upload only one.</li>
+          <li>The identity now appears in the list.</li>
+          <li>In a connection profile, set <strong>Identity</strong> to the imported key. Connect.</li>
+          <li>The matching public key must already be in the remote server's <code>~/.ssh/authorized_keys</code> for auth to succeed.</li>
+        </ol>
+      </details>
     </div>
   </div>
 </body>
